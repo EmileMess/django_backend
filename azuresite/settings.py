@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
     'post.apps.PostConfig',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'corsheaders',
+    'rest_framework', # new
+    'rest_framework.authtoken', # new
+    'rest_auth', # new
+    'django.contrib.sites', # new
+    'allauth', # new
+    'allauth.account', # new
+    'allauth.socialaccount', # new
+    'rest_auth.registration', # new
 ]
 
 MIDDLEWARE = [
@@ -126,6 +135,9 @@ USE_TZ = True
 # STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+###################
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 ###################
 
@@ -157,3 +169,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'demo', 'static')
 ]
+
+###################
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend", "allauth.account.auth_backends.AuthenticationBackend",)
+
+SITE_ID = 1 
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_UNIQUE_EMAIL = True
+
+REST_FRAMEWORK = {    
+'DATETIME_FORMAT': "%m/%d/%Y %I:%M%P", 'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication',],}
