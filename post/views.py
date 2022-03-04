@@ -15,10 +15,12 @@ class PostView(APIView):
     def get(self, request, *args, **kwargs):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
+        print("GET: ", serializer.data)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
+            print("Got POST request")
             allimages = request.FILES.getlist('images')
             for image in allimages:
                 Post.objects.create(images=image)
