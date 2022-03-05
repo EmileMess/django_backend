@@ -36,7 +36,7 @@ class PostView(APIView):
             datasetname = "mydataset"
             user = "myuser"
             # dataset = Dataset.objects.get(datasetname=datasetname, user=user)
-            dataset = Dataset.objects.create(datasetname=datasetname, user=user)
+            dataset = Dataset.objects.create(name=datasetname, user=user)
             for image in allimages:
                 Image.objects.create(name='img', image=image, dataset=dataset)
             return Response(status=status.HTTP_201_CREATED)
