@@ -17,13 +17,13 @@ class uploadDataView(APIView):
     # TODO: Tokens!
 
     # get all datasets
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         datasets = Dataset.objects.all()
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
     # upload one dataset
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         if request.method == "POST":
             allimages = request.FILES.getlist('images')
             datasetname = request.POST.get('datasetname')
@@ -49,9 +49,9 @@ class getImagesView(APIView):
     # TODO: params "email" und "datasetname" aus react nicht local
 
     # get images from one dataset
-    def get(self, request, *args, **kwargs):
-        user = request.query_params["user"] # CustomUser.objects.get(email="e.mess1806@gmail.com")
-        datasetname = request.query_params["datasetname"] # "yyy"
+    def get(self, request):
+        user = CustomUser.objects.get(email=request.query_params["user"])
+        datasetname = request.query_params["datasetname"]
         dataset = Dataset.objects.get(name=datasetname, user=user)
 
         serializer = DatasetSerializer(dataset, many=True)
