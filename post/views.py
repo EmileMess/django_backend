@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from unicodedata import name
 from .serializers import PostSerializer, DatasetSerializer, ImageSerializer
 from .models import Post, Dataset, Image
@@ -43,6 +44,8 @@ class PostView(APIView):
             allimages = request.FILES.getlist('images')
             datasetname = request.POST.get('datasetname')
             useremail = request.POST.get('user')
+            if Dataset.objects.filter(name=datasetname, user=CustomUser.objects.get(email=useremail)).exists():
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
             for image in allimages:
                 Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(name=datasetname, user=CustomUser.objects.get(email=useremail)))
