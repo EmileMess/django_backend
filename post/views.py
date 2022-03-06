@@ -1,3 +1,4 @@
+from unicodedata import name
 from .serializers import PostSerializer, DatasetSerializer, ImageSerializer
 from .models import Post, Dataset, Image
 from users.models import CustomUser
@@ -46,6 +47,6 @@ class PostView(APIView):
             for image in allimages:
                 Post.objects.create(images=image)
             for image in allimages:
-                Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(datasetname=datasetname, user=CustomUser.objects.get(email=useremail)))
+                Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(name=datasetname, user=CustomUser.objects.get(email=useremail)))
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
