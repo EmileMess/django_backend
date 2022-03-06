@@ -1,5 +1,6 @@
 from .serializers import PostSerializer, DatasetSerializer, ImageSerializer
 from .models import Post, Dataset, Image
+from users.models import CustomUser
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -34,9 +35,9 @@ class PostView(APIView):
         if request.method == "POST":
             allimages = request.FILES.getlist('images')
             datasetname = "mydataset"
-            user = "myuser"
+            useremail = "e.mess1806@gmail.com"
             # dataset = Dataset.objects.get(datasetname=datasetname, user=user)
-            dataset = Dataset.objects.create(name=datasetname, user=user)
+            dataset = Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
             for image in allimages:
                 Image.objects.create(name='img', image=image, dataset=dataset)
             return Response(status=status.HTTP_201_CREATED)
