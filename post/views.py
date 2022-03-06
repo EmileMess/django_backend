@@ -16,29 +16,35 @@ class PostView(APIView):
     #     serializer = PostSerializer(posts, many=True)
     #     return Response(serializer.data)
 
-    # def post(self, request, *args, **kwargs):
-    #     if request.method == "POST":
-    #         allimages = request.FILES.getlist('images')
-    #         for image in allimages:
-    #             Post.objects.create(images=image)
-    #         return Response(status=status.HTTP_201_CREATED)
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":
+            allimages = request.FILES.getlist('images')
+            for image in allimages:
+                Post.objects.create(images=image)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+    # HOW TO DEBUG DJANGO POST/GET
 
+    # Nur dataset des users anzeigen (email und token übergeben)
     def get(self, request, *args, **kwargs):
         datasets = Dataset.objects.all()
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        if request.method == "POST":
-            allimages = request.FILES.getlist('images')
-            datasetname = "mydataset"
-            useremail = "e.mess1806@gmail.com"
-            # dataset = Dataset.objects.get(datasetname=datasetname, user=user)
-            dataset = Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
-            for image in allimages:
-                Image.objects.create(name='img', image=image, dataset=dataset)
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    # Dataset, useremail und image_names von react übergeben
+    # Unterscheiden zwischen dataset read und create
+    # Prüfen ob user logged in (token?)
+
+    # def post(self, request, *args, **kwargs):
+    #     if request.method == "POST":
+    #         allimages = request.FILES.getlist('images')
+    #         datasetname = "mydataset"
+    #         useremail = "e.mess1806@gmail.com"
+    #         # dataset = Dataset.objects.get(datasetname=datasetname, user=user)
+    #         dataset = Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
+    #         for image in allimages:
+    #             Image.objects.create(name='img', image=image, dataset=dataset)
+    #         return Response(status=status.HTTP_201_CREATED)
+    #     return Response(status=status.HTTP_400_BAD_REQUEST)
