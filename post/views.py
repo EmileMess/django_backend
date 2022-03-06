@@ -13,31 +13,14 @@ from rest_framework import status
 class PostView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    # def get(self, request, *args, **kwargs):
-    #     posts = Post.objects.all()
-    #     serializer = PostSerializer(posts, many=True)
-    #     return Response(serializer.data)
+    # TODO: Errors in console
+    # TODO: Tokens!
+    # TODO: params "email" und "datasetname" aus react nicht local
 
-    # def post(self, request, *args, **kwargs):
-    #     if request.method == "POST":
-    #         allimages = request.FILES.getlist('images')
-    #         for image in allimages:
-    #             Post.objects.create(images=image)
-    #         return Response(status=status.HTTP_201_CREATED)
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-    # HOW TO DEBUG DJANGO POST/GET
-
-    # Nur dataset des users anzeigen (email und token übergeben)
     def get(self, request, *args, **kwargs):
-        datasets = Dataset.objects.all()
-        serializer = DatasetSerializer(datasets, many=True)
+        images = Image.objects.get(dataset = Dataset.objects.get(name="yy", user=CustomUser.objects.get(email="e.mess1806@gmail.com")))
+        serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
-
-    # Dataset, useremail und image_names von react übergeben
-    # Unterscheiden zwischen dataset read und create
-    # Prüfen ob user logged in (token?)
 
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
