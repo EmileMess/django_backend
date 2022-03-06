@@ -1,11 +1,6 @@
 from django.db import models
 from users.models import CustomUser
 
-# Create your models here.
-
-# class Post(models.Model):
-#     images = models.FileField(upload_to='data', default='')
-
 
 class Dataset(models.Model):
     name = models.CharField(default='', max_length=100)

@@ -8,15 +8,13 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 
-# Create your views here.
 
 class uploadDataView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
+    # TODO: Favicon
     # TODO: Errors in console
     # TODO: Tokens!
-    # TODO: params "email" und "datasetname" aus react nicht local
-    # TODO: remove POST model
 
     # get all datasets
     def get(self, request, *args, **kwargs):
@@ -48,11 +46,13 @@ class uploadDataView(APIView):
 class getImagesView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
+    # TODO: params "email" und "datasetname" aus react nicht local
+
     # get images from one dataset
     def get(self, request, *args, **kwargs):
         user = CustomUser.objects.get(email="e.mess1806@gmail.com")
         datasetname = "yyy"
         dataset = Dataset.objects.get(name=datasetname, user=user)
-        images = Image.objects.get(dataset=dataset)
+        images = Image.objects.all() #.get(dataset=dataset)
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
