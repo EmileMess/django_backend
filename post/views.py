@@ -50,8 +50,8 @@ class getImagesView(APIView):
 
     # get images from one dataset
     def get(self, request, *args, **kwargs):
-        user = request.query.user # request.data.args["user"] # CustomUser.objects.get(email="e.mess1806@gmail.com")
-        datasetname = request.query.datasetname # request.data.args["datasetname"] # "yyy"
+        user = request.data.args.user # CustomUser.objects.get(email="e.mess1806@gmail.com")
+        datasetname = request.data.arg.datasetname # "yyy"
         dataset = Dataset.objects.get(name=datasetname, user=user)
 
         serializer = DatasetSerializer(dataset, many=True)
