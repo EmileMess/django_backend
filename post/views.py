@@ -19,9 +19,10 @@ class PostView(APIView):
     # TODO: remove POST model
 
     def get(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(email="e.mess1806@gmail.com")
         image = Image.objects.all()
-        # images = Image.objects.get(dataset=Dataset.objects.get(name="yyy", user=CustomUser.objects.get(email="e.mess1806@gmail.com")))
-        datasets = Dataset.objects.all()
+        datasets=Dataset.objects.get(user=user)
+        # images = Image.objects.get(dataset=dataset)
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
