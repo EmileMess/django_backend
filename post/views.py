@@ -10,7 +10,7 @@ from rest_framework import status
 
 # Create your views here.
 
-class PostView(APIView):
+class uploadDataView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     # TODO: Errors in console
@@ -18,22 +18,13 @@ class PostView(APIView):
     # TODO: params "email" und "datasetname" aus react nicht local
     # TODO: remove POST model
 
-    # # get images from one given dataset
-    # # use like: 
-    # def get(self, request, *args, **kwargs):
-    #     user = CustomUser.objects.get(email="e.mess1806@gmail.com")
-    #     datasetname = "yyy"
-    #     dataset = Dataset.objects.get(name=datasetname, user=user)
-    #     images = Image.objects.get(dataset=dataset)
-    #     serializer = ImageSerializer(images, many=True)
-    #     return Response(serializer.data)
-
-    # get all dataset names
+    # get all datasets
     def get(self, request, *args, **kwargs):
         datasets = Dataset.objects.all()
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
+    # upload one dataset
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
             allimages = request.FILES.getlist('images')
@@ -52,3 +43,16 @@ class PostView(APIView):
 
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class getImagesView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    # get images from one dataset
+    def get(self, request, *args, **kwargs):
+        user = CustomUser.objects.get(email="e.mess1806@gmail.com")
+        datasetname = "yyy"
+        dataset = Dataset.objects.get(name=datasetname, user=user)
+        images = Image.objects.get(dataset=dataset)
+        serializer = ImageSerializer(images, many=True)
+        return Response(serializer.data)
