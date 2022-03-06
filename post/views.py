@@ -16,10 +16,13 @@ class PostView(APIView):
     # TODO: Errors in console
     # TODO: Tokens!
     # TODO: params "email" und "datasetname" aus react nicht local
+    # TODO: remove POST model
 
     def get(self, request, *args, **kwargs):
-        images = Image.objects.get(dataset = Dataset.objects.get(name="yy", user=CustomUser.objects.get(email="e.mess1806@gmail.com")))
-        serializer = ImageSerializer(images, many=True)
+        image = Image.objects.all()
+        images = Image.objects.get(dataset=Dataset.objects.get(name="yyy", user=CustomUser.objects.get(email="e.mess1806@gmail.com")))
+        datasets = Dataset.objects.all()
+        serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -27,10 +30,11 @@ class PostView(APIView):
             allimages = request.FILES.getlist('images')
             datasetname = request.POST.get('datasetname')
             useremail = request.POST.get('user')
-            if Dataset.objects.filter(name=datasetname, user=CustomUser.objects.get(email=useremail)).exists():
+            user = CustomUser.objects.get(email=useremail)
+            if Dataset.objects.filter(name=datasetname, user=user).exists():
                 return Response(status=status.HTTP_403_FORBIDDEN)
-            Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
+            Dataset.objects.create(name=datasetname, user=user)
             for image in allimages:
-                Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(name=datasetname, user=CustomUser.objects.get(email=useremail)))
+                Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(name=datasetname, user=user))
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
