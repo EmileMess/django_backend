@@ -20,10 +20,8 @@ class PostView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = CustomUser.objects.get(email="e.mess1806@gmail.com")
-        image = Image.objects.all()
-        datasets=Dataset.objects.get(user=user)
-        # images = Image.objects.get(dataset=dataset)
-        serializer = DatasetSerializer(datasets, many=True)
+        images = Image.objects.get(user=user)
+        serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
