@@ -18,7 +18,8 @@ class uploadDataView(APIView):
 
     # get all datasets
     def get(self, request):
-        datasets = Dataset.objects.all()
+        user = CustomUser.objects.get(email=request.query_params["user"])
+        datasets = Dataset.objects.filter(user=user)
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
 
@@ -43,6 +44,8 @@ class uploadDataView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# TODO: Handle: kein datensatz gefunden -> in react anzeigen dass einer uploaded werden muss o.ä.
+
 class getImagesView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
@@ -52,7 +55,7 @@ class getImagesView(APIView):
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasetname = request.query_params["datasetname"]
-        dataset = Dataset.objects.filter(name=datasetname, user=user)
+        dataset = Dataset.objects.filter(name=datasetname, user=user) # Why is get() not working?
 
         # serializer = DatasetSerializer(dataset, many=True)
         # return Response(serializer.data)
