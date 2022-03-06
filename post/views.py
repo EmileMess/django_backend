@@ -52,7 +52,7 @@ class getImagesView(APIView):
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasetname = request.query_params["datasetname"]
-        dataset = Dataset.objects.filter(name=datasetname, user=user)
+        dataset = Dataset.objects.get(name=datasetname, user=user)
 
         serializer = DatasetSerializer(dataset, many=True)
         return Response(serializer.data)
