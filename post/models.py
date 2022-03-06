@@ -3,9 +3,8 @@ from users.models import CustomUser
 
 # Create your models here.
 
-class Post(models.Model):
-    images = models.FileField(upload_to='data', default='')
-
+# class Post(models.Model):
+#     images = models.FileField(upload_to='data', default='')
 
 
 class Dataset(models.Model):

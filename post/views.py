@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 from unicodedata import name
-from .serializers import PostSerializer, DatasetSerializer, ImageSerializer
-from .models import Post, Dataset, Image
+from .serializers import DatasetSerializer, ImageSerializer
+from .models import Dataset, Image
 from users.models import CustomUser
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
