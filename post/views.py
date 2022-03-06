@@ -41,8 +41,8 @@ class PostView(APIView):
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
             allimages = request.FILES.getlist('images')
-            datasetname = request.FILES.get('datasetname')
-            useremail = request.FILES.get('user')
+            datasetname = request.POST.get('datasetname')
+            useremail = request.POST.get('user')
             Dataset.objects.create(name=datasetname, user=CustomUser.objects.get(email=useremail))
             for image in allimages:
                 Image.objects.create(name='img', image=image, dataset=Dataset.objects.get(name=datasetname, user=CustomUser.objects.get(email=useremail)))
