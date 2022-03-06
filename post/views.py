@@ -18,11 +18,20 @@ class PostView(APIView):
     # TODO: params "email" und "datasetname" aus react nicht local
     # TODO: remove POST model
 
+    # get images from one given dataset
     def get(self, request, *args, **kwargs):
         user = CustomUser.objects.get(email="e.mess1806@gmail.com")
-        images = Image.objects.get(user=user)
+        datasetname = "yyy"
+        dataset = Dataset.objects.get(name=datasetname, user=user)
+        images = Image.objects.get(dataset=dataset)
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
+
+    # # get all dataset names
+    # def get(self, request, *args, **kwargs):
+    #     datasets = Dataset.objects.all()
+    #     serializer = DatasetSerializer(datasets, many=True)
+    #     return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
