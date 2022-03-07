@@ -13,20 +13,27 @@ class uploadDataView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
     # get all datasets
+
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasets = Dataset.objects.filter(user=user)
+        serializer = DatasetSerializer(datasets, many=True)
+        return Response(serializer.data)
 
-        result = []
+    # def get(self, request):
+    #     user = CustomUser.objects.get(email=request.query_params["user"])
+    #     datasets = Dataset.objects.filter(user=user)
 
-        for dset in datasets:
-            serializer = DatasetSerializer(dset)
-            images = Image.objects.filter(dataset=dset)
-            mydict = {'img_num': len(images), 'img_first': images[0].image}
-            mydict.update(serializer.data)
-            result.append(mydict)
+    #     result = []
 
-        return Response(result)
+    #     for dset in datasets:
+    #         serializer = DatasetSerializer(dset)
+    #         images = Image.objects.filter(dataset=dset)
+    #         mydict = {'img_num': len(images), 'img_first': images[0].image}
+    #         mydict.update(serializer.data)
+    #         result.append(mydict)
+
+    #     return Response(result)
 
     # upload one dataset
     def post(self, request):
@@ -56,8 +63,13 @@ class getImagesView(APIView):
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasetname = request.query_params["datasetname"]
-        dataset = Dataset.objects.filter(name=datasetname, user=user) # Why is get() not working?
 
-        images = Image.objects.filter(dataset=dataset[0])
+        # Check if Dataset exists
+        dataset = Dataset.objects.filter(name=datasetname, user=user) # Should be only one dataset - Why is get() not working?
+        if dataset.exists():
+            images = Image.objects.filter(dataset=dataset[0])
+        else:
+            return Response(status=status.HTTP_409_CONFLICT)
+
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
