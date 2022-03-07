@@ -1,4 +1,5 @@
 from contextlib import nullcontext
+from tkinter import MULTIPLE
 from unicodedata import name
 from .serializers import DatasetSerializer, ImageSerializer
 from .models import Dataset, Image
@@ -31,9 +32,10 @@ class uploadDataView(APIView):
 
         for dset in datasets:
             images = Image.objects.filter(dataset=dset)
-            serializer = DatasetSerializer(dset)
-            mydict = {'img_num': len(images), 'img_first': images[0]}
-            mydict.update(serializer.data)
+            data_serializer = DatasetSerializer(dset)
+            image_serializer = ImageSerializer(images[0])
+            mydict = {'img_num': len(images), 'img_first': image_serializer["image"]}
+            mydict.update(data_serializer.data)
             result.append(mydict)
 
         return Response(result)
