@@ -24,12 +24,15 @@ class uploadDataView(APIView):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasets = Dataset.objects.filter(user=user)
 
+        if not datasets.exists():
+            return Response(status=status.HTTP_409_CONFLICT)
+
         result = []
 
         for dset in datasets:
             serializer = DatasetSerializer(dset)
             images = Image.objects.filter(dataset=dset)
-            # mydict = {'img_num': len(images), 'img_first': images[0].image}
+            mydict = {'img_num': len(images), 'img_first': images[0].image}
             # mydict.update(serializer.data)
             result.append(serializer.data) # mydict
 
@@ -66,10 +69,10 @@ class getImagesView(APIView):
 
         # Check if Dataset exists
         dataset = Dataset.objects.filter(name=datasetname, user=user) # Should be only one dataset - Why is get() not working?
-        if dataset.exists():
-            images = Image.objects.filter(dataset=dataset[0])
-        else:
+        if not dataset.exists():
             return Response(status=status.HTTP_409_CONFLICT)
 
+        images = Image.objects.filter(dataset=dataset[0])
+            
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
