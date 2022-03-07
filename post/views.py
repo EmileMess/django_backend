@@ -12,16 +12,21 @@ from rest_framework import status
 class uploadDataView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    # TODO: Favicon
-    # TODO: Errors in console
-    # TODO: Tokens!
-
     # get all datasets
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasets = Dataset.objects.filter(user=user)
-        serializer = DatasetSerializer(datasets, many=True)
-        return Response(serializer.data)
+
+        result = []
+
+        for dset in datasets:
+            serializer = DatasetSerializer(dset)
+            images = Image.objects.filter(dataset=dset)
+            mydict = {'img_num': len(images), 'img_first': images[0].image}
+            mydict.update(serializer.data)
+            result.append(mydict)
+
+        return Response(result)
 
     # upload one dataset
     def post(self, request):
@@ -42,23 +47,16 @@ class uploadDataView(APIView):
 
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-# TODO: Handle: kein datensatz gefunden -> in react anzeigen dass einer uploaded werden muss o.ä.
+        
 
 class getImagesView(APIView):
     parser_classes = (MultiPartParser, FormParser)
-
-    # TODO: params "email" und "datasetname" aus react nicht local
 
     # get images from one dataset
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasetname = request.query_params["datasetname"]
         dataset = Dataset.objects.filter(name=datasetname, user=user) # Why is get() not working?
-
-        # serializer = DatasetSerializer(dataset, many=True)
-        # return Response(serializer.data)
 
         images = Image.objects.filter(dataset=dataset[0])
         serializer = ImageSerializer(images, many=True)
