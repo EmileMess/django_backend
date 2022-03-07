@@ -27,14 +27,14 @@ class uploadDataView(APIView):
         if not datasets.exists():
             return Response(status=status.HTTP_409_CONFLICT)
 
-        result = ["a", "b"]
+        result = []
 
         for dset in datasets:
             images = Image.objects.filter(dataset=dset)
             serializer = DatasetSerializer(dset)
             mydict = {'img_num': len(images), 'img_first': images[0].image}
             serializer.data.update(mydict)
-            # result.append(mydict) # serializer.data
+            result.append(mydict) #  serializer.data
 
         return Response(result)
 
