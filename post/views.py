@@ -33,7 +33,7 @@ class uploadDataView(APIView):
             serializer = DatasetSerializer(dset)
             images = Image.objects.filter(dataset=dset)
             mydict = {'img_num': len(images), 'img_first': images[0].image}
-            # mydict.update(serializer.data)
+            serializer.data.update(mydict)
             result.append(serializer.data) # mydict
 
         return Response(result)
