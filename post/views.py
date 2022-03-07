@@ -1,5 +1,4 @@
 from contextlib import nullcontext
-from tkinter import MULTIPLE
 from unicodedata import name
 from .serializers import DatasetSerializer, ImageSerializer
 from .models import Dataset, Image
