@@ -3,6 +3,10 @@ from .models import Dataset, Image
 
 
 class DatasetSerializer(serializers.ModelSerializer):
+
+    img_first = serializers.SerializerMethodField()
+    img_num = serializers.SerializerMethodField()
+
     class Meta:
         model = Dataset
         fields = '__all__'
