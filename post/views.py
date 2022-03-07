@@ -14,26 +14,26 @@ class uploadDataView(APIView):
 
     # get all datasets
 
-    def get(self, request):
-        user = CustomUser.objects.get(email=request.query_params["user"])
-        datasets = Dataset.objects.filter(user=user)
-        serializer = DatasetSerializer(datasets, many=True)
-        return Response(serializer.data)
-
     # def get(self, request):
     #     user = CustomUser.objects.get(email=request.query_params["user"])
     #     datasets = Dataset.objects.filter(user=user)
+    #     serializer = DatasetSerializer(datasets, many=True)
+    #     return Response(serializer.data)
 
-    #     result = []
+    def get(self, request):
+        user = CustomUser.objects.get(email=request.query_params["user"])
+        datasets = Dataset.objects.filter(user=user)
 
-    #     for dset in datasets:
-    #         serializer = DatasetSerializer(dset)
-    #         images = Image.objects.filter(dataset=dset)
-    #         mydict = {'img_num': len(images), 'img_first': images[0].image}
-    #         mydict.update(serializer.data)
-    #         result.append(mydict)
+        result = []
 
-    #     return Response(result)
+        for dset in datasets:
+            serializer = DatasetSerializer(dset)
+            images = Image.objects.filter(dataset=dset)
+            mydict = {'img_num': len(images), 'img_first': images[0].image}
+            mydict.update(serializer.data)
+            result.append(mydict)
+
+        return Response(result)
 
     # upload one dataset
     def post(self, request):
