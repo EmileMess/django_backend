@@ -16,7 +16,7 @@ class runAugmentation(APIView):
     def get(self, request):
         images = getAllImages(request)
         result = augment_images(images)
-        return result
+        return Response(result)
 
 
 class uploadDataView(APIView):
