@@ -9,6 +9,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from .AI.main import augment_images
 
+# TODO: Create unique file name when saving images
+# TODO: Create container for each user
+# TODO: Delete dataset
+# TODO: Access control
+
 
 class runAugmentation(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -16,6 +21,11 @@ class runAugmentation(APIView):
     def get(self, request):
         images = getAllImages(request)
         result = augment_images(images)
+
+        # Save new augmented dataset
+        # frame_jpg = cv2.imencode('.jpg', array)
+        # file = ContentFile(frame_jpg)
+        # instance.photo.save('myphoto.jpg', file, save=True)
         return Response(result)
 
 

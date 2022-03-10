@@ -1,11 +1,12 @@
 import numpy as np
-import skimage
+from PIL import Image
+from urllib import request
+from io import BytesIO
 
 def process_images (images):
     np_images = []
     for img in images:
-        im = skimage.io.imread(img['image'])
-        im = np.rot90(im)
+        im = np.rot90(np.asarray(Image.open(BytesIO(request.urlopen(img['image']).read()))))
         np_images.append(im)
     return np_images
 
