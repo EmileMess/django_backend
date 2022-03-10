@@ -7,23 +7,26 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
+from ..AI.main import augment_images
+
+
+class runAugmentation(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get(self, request):
+        images = getAllImages(request)
+        result = augment_images(images)
+        return result
 
 
 class uploadDataView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    # get all datasets
-
-    # def get(self, request):
-    #     user = CustomUser.objects.get(email=request.query_params["user"])
-    #     datasets = Dataset.objects.filter(user=user)
-    #     serializer = DatasetSerializer(datasets, many=True)
-    #     return Response(serializer.data)
-
+    # get datasets with first_image and img_num each
     def get(self, request):
         user = CustomUser.objects.get(email=request.query_params["user"])
         datasets = Dataset.objects.filter(user=user)
-
+        
         if not datasets.exists():
             return Response(status=status.HTTP_409_CONFLICT)
 
@@ -63,17 +66,24 @@ class uploadDataView(APIView):
 class getImagesView(APIView):
     parser_classes = (MultiPartParser, FormParser)
 
-    # get images from one dataset
     def get(self, request):
-        user = CustomUser.objects.get(email=request.query_params["user"])
-        datasetname = request.query_params["datasetname"]
+        result = getAllImages(request)
+        return Response(result)
 
-        # Check if Dataset exists
-        dataset = Dataset.objects.filter(name=datasetname, user=user) # Should be only one dataset - Why is get() not working?
-        if not dataset.exists():
-            return Response(status=status.HTTP_409_CONFLICT)
 
-        images = Image.objects.filter(dataset=dataset[0])
-            
-        serializer = ImageSerializer(images, many=True)
-        return Response(serializer.data)
+#############################
+
+
+# get images from one dataset
+def getAllImages(request):
+    user = CustomUser.objects.get(email=request.query_params["user"])
+    datasetname = request.query_params["datasetname"]
+
+    # Check if Dataset exists
+    dataset = Dataset.objects.filter(name=datasetname, user=user) # Should be only one dataset - Why is get() not working?
+    if not dataset.exists():
+        return Response(status=status.HTTP_409_CONFLICT)
+
+    images = Image.objects.filter(dataset=dataset[0])
+    serializer = ImageSerializer(images, many=True)
+    return serializer.data

@@ -6,3 +6,5 @@ django-cors-headers
 django-storages[azure]
 django-rest-auth
 django-allauth
+numpy
+scikit-image
