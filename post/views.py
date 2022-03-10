@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
-from ..AI.main import augment_images
+from .AI.main import augment_images
 
 
 class runAugmentation(APIView):
